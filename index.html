@@ -37,31 +37,34 @@
 
     /* сетка */
     .modal-content {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 16px;
-      margin-top: 20px;
-    }
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 равных колонок */
+  gap: 24px; /* расстояние между ними */
+  margin-top: 20px;
+  align-items: start;
+}
 
-    .modal-content label {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      display: block;
-    }
+.modal-content label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
 
-    .modal-content input,
-    .modal-content select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box; /* чтобы ширина считалась вместе с padding */
+  height: 40px; /* одинаковая высота для всех */
+}
 
-    .modal-content .upload {
-      text-align: center;
-    }
+.modal-content .upload {
+  text-align: center;
+}
 
     /* подсветка ошибки */
     .input-error {
