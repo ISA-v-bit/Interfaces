@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit single event</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* затемнение заднего фона */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    /* окно */
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 900px;
+      width: 90%;
+      margin: 100px auto;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* сетка */
+    .modal-content {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .modal-content label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .modal-content .upload {
+      text-align: center;
+    }
+
+    /* подсветка ошибки */
+    .input-error {
+      border: 1px solid #e74c3c !important;
+      background-color: #fdecea;
+    }
+
+    /* alert */
+    .alert {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .alert-error {
+      background: #fdecea;
+      color: #e74c3c;
+      border: 1px solid #e74c3c;
+    }
+
+    .alert-success {
+      background: #eafaf1;
+      color: #2ecc71;
+      border: 1px solid #2ecc71;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      background: #f5f5f5;
+    }
+
+    .btn-save {
+      background: #007bff;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<button id="openModalBtn">Open modal</button>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>Edit single event</h2>
+
+    <!-- Ошибка -->
+    <div class="alert alert-error" id="errorAlert">
+      Введите количество алгокоинов больше нуля
+    </div>
+
+    <!-- Успех -->
+    <div class="alert alert-success" id="successAlert">
+      Событие успешно сохранено
+    </div>
+
+    <div class="modal-content">
+      <!-- Icon -->
+      <div>
+        <label>Icon event</label>
+        <div class="upload">
+          <img src="https://via.placeholder.com/60" alt="icon" style="border-radius:8px;">
+          <div><a href="#">+ Upload</a></div>
+        </div>
+      </div>
+
+      <!-- Visible -->
+      <div>
+        <label>Visible for student</label>
+        <input type="checkbox">
+      </div>
+
+      <!-- Contest ID -->
+      <div>
+        <label>Contest ID</label>
+        <input type="text">
+      </div>
+
+      <!-- Lootbox -->
+      <div>
+        <label>Type lootbox</label>
+        <select>
+          <option value="regular">regular</option>
+          <option value="special">special</option>
+        </select>
+      </div>
+
+      <!-- Custom lootbox -->
+      <div>
+        <label>ID custom lootbox</label>
+        <input type="text">
+      </div>
+
+      <!-- Algocoins -->
+      <div>
+        <label>Algocoins</label>
+        <input type="number" id="algocoinsInput" placeholder="Введите число">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" id="closeModalBtn">Cancel</button>
+      <button class="btn btn-save" id="saveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const openModalBtn = document.getElementById("openModalBtn");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const saveBtn = document.getElementById("saveBtn");
+  const algocoinsInput = document.getElementById("algocoinsInput");
+  const errorAlert = document.getElementById("errorAlert");
+  const successAlert = document.getElementById("successAlert");
+
+  // открыть модалку
+  openModalBtn.onclick = () => modalOverlay.style.display = "block";
+  closeModalBtn.onclick = () => closeModal();
+  modalOverlay.onclick = (e) => {
+    if (e.target === modalOverlay) {
+      closeModal();
+    }
+  };
+
+  function closeModal() {
+    modalOverlay.style.display = "none";
+    clearMessages();
+  }
+
+  // очистка сообщений
+  function clearMessages() {
+    algocoinsInput.classList.remove("input-error");
+    errorAlert.style.display = "none";
+    successAlert.style.display = "none";
+  }
+
+  // валидация при сохранении
+  saveBtn.onclick = () => {
+    const value = parseInt(algocoinsInput.value, 10);
+
+    if (isNaN(value) || value <= 0) {
+      successAlert.style.display = "none";
+      algocoinsInput.classList.add("input-error");
+      errorAlert.style.display = "block";
+    } else {
+      algocoinsInput.classList.remove("input-error");
+      errorAlert.style.display = "none";
+      successAlert.style.display = "block";
+
+      // закрыть через 2 сек
+      setTimeout(() => {
+        closeModal();
+      }, 2000);
+    }
+  };
+</script>
+
+</body>
+</html>
