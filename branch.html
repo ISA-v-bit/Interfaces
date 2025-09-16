@@ -45,15 +45,16 @@
     }
 
     .icon-cell {
-      width: 80px;
-    }
+  width: 140px; /* ширина колонки под картинку */
+}
 
-    .icon-cell img {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      display: block;
-    }
+.icon-cell img {
+  width: 120px;
+  height: 70px;
+  object-fit: contain; /* чтобы картинка не обрезалась */
+  border-radius: 8px;
+  display: block;
+}
 
     input, select {
       width: 100%;
