@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Algocoins Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    .center-wrapper {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-blue { background: #007bff; color: #fff; }
+    .btn-purple { background: #6c63ff; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="center-wrapper">
+    <div class="btn-group">
+      <button class="btn btn-blue" onclick="location.href='modal.html'">
+        Open modal
+      </button>
+      <button class="btn btn-purple" onclick="location.href='branch.html'">
+        Open algocoins in branch
+      </button>
+    </div>
+  </div>
+</body>
+</html>
