@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Редактор миссий и событий</title>
+  <title>Редактор миссий</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,9 +11,16 @@
       padding: 20px;
     }
 
+    .header-row {
+      display: flex;
+      justify-content: space-between; /* заголовок слева, кнопка справа */
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
     h1 {
       font-size: 20px;
-      margin-bottom: 20px;
+      margin: 0;
     }
 
     table {
@@ -40,9 +47,13 @@
     .icon-cell {
       width: 80px;
     }
-   <td class="icon-cell">
-  <img src="images/timing.jpg" alt="timing icon">
-</td>
+
+    .icon-cell img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: block;
+    }
 
     input, select {
       width: 100%;
@@ -54,7 +65,7 @@
     }
 
     .btn {
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 6px;
       border: none;
       cursor: pointer;
@@ -74,7 +85,6 @@
     .btn-add {
       background: #6c63ff;
       color: #fff;
-      margin: 16px 0;
     }
 
     .btn-icon {
@@ -93,7 +103,10 @@
 </head>
 <body>
 
-<h1>Редактор миссий</h1>
+<div class="header-row">
+  <h1>Редактор миссий</h1>
+  <button class="btn btn-add">+ Добавить</button>
+</div>
 
 <table>
   <thead>
@@ -107,8 +120,12 @@
     </tr>
   </thead>
   <tbody>
+    <!-- Событие с иконкой из папки images -->
     <tr>
-      <td class="icon-cell"><img src="icon.png" alt="icon"></td>
+      <td class="icon-cell">
+        <!-- Все иконки для миссий храним в папке /images -->
+        <img src="images/timing.jpg" alt="timing icon">
+      </td>
       <td><input type="text" value="Streak keeper"></td>
       <td><input type="text" value="Join at least 4 classes this month - stay consistent!"></td>
       <td><input type="number" value="10"></td>
@@ -118,6 +135,8 @@
         <button class="btn-icon">🗑️</button>
       </td>
     </tr>
+
+    <!-- Новая пустая строка для добавления миссии -->
     <tr>
       <td class="icon-cell">+ Добавить</td>
       <td><input type="text" placeholder="Название"></td>
@@ -131,8 +150,6 @@
     </tr>
   </tbody>
 </table>
-
-<button class="btn btn-add">+ Добавить</button>
 
 </body>
 </html>
