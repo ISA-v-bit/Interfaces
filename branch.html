@@ -206,8 +206,15 @@
 </head>
 <body>
 
+<!-- Missions editor -->
 <div class="header-row">
-  <h1>Missions editor</h1>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <h1>Missions editor</h1>
+    <label style="font-size:14px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+      <input type="checkbox" id="inheritCheckbox">
+      Inherit missions
+    </label>
+  </div>
   <button class="btn btn-add">+ Add</button>
 </div>
 
@@ -246,6 +253,55 @@
         <button class="btn-icon">✏️</button>
         <button class="btn-icon">🗑️</button>
       </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Shop -->
+<div class="header-row" style="margin-top:40px;">
+  <h1>Shop</h1>
+  <button class="btn btn-publish">Import</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Price (coins)</th>
+      <th>Available</th>
+      <th>Purchased</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>subscription_robux_200</td>
+      <td>680</td>
+      <td>10</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>subscription_robux_100</td>
+      <td>660</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>subscription_robux_500</td>
+      <td>900</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>whatsapp_stickers</td>
+      <td>100</td>
+      <td>∞</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <td>scratch_tutorial</td>
+      <td>400</td>
+      <td>∞</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
@@ -350,7 +406,6 @@
       branchErrorAlert.style.display = "none";
       branchSuccessAlert.style.display = "block";
 
-      // hide success after 2s and close modal
       setTimeout(() => {
         branchSuccessAlert.style.display = "none";
         editModalOverlay.style.display = "none";
@@ -358,53 +413,6 @@
     }
   };
 </script>
-<!-- Shop block -->
-<div class="header-row" style="margin-top:40px;">
-  <h1>Shop</h1>
-  <button class="btn btn-publish">Import</button>
-</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Code</th>
-      <th>Price (coins)</th>
-      <th>Available</th>
-      <th>Purchased</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>subscription_robux_200</td>
-      <td>680</td>
-      <td>10</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>subscription_robux_100</td>
-      <td>660</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>subscription_robux_500</td>
-      <td>900</td>
-      <td>2</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>whatsapp_stickers</td>
-      <td>100</td>
-      <td>∞</td>
-      <td>22</td>
-    </tr>
-    <tr>
-      <td>scratch_tutorial</td>
-      <td>400</td>
-      <td>∞</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
 </body>
 </html>
