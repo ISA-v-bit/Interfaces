@@ -2,21 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Missions Editor</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f5fb;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
+  <div class="header-row">
+  <div style="display:flex; align-items:center; gap:16px;">
+    <h1>Missions editor</h1>
+    <label style="font-size:14px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+      <input type="checkbox" id="inheritCheckbox">
+      Inherit missions
+    </label>
+  </div>
+  <button class="btn btn-add">+ Add</button>
+</div>
 
     h1 {
       font-size: 20px;
