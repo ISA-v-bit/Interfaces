@@ -178,24 +178,30 @@
       background: #f6f4ff;
     }
 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
+    .publish-toggle {
+      border: none;
       border-radius: 999px;
+      padding: 8px 18px;
       font-weight: 600;
       font-size: 12px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
     }
 
-    .status--published {
-      background: rgba(96, 189, 94, 0.16);
-      color: #2f8a48;
+    .publish-toggle:active {
+      transform: scale(0.97);
     }
 
-    .status--draft {
-      background: rgba(255, 184, 84, 0.2);
-      color: #a96410;
+    .publish-toggle--published {
+      background: rgba(96, 189, 94, 0.18);
+      color: #1b7431;
+      box-shadow: 0 12px 24px rgba(47, 122, 56, 0.24);
+    }
+
+    .publish-toggle--draft {
+      background: rgba(255, 184, 84, 0.26);
+      color: #8a4c00;
+      box-shadow: 0 12px 24px rgba(169, 100, 16, 0.2);
     }
 
     .actions {
@@ -375,7 +381,7 @@
               <th>Название для ученика</th>
               <th>Описание</th>
               <th>Алгокоины</th>
-              <th>Статус</th>
+              <th>Публикация</th>
               <th>Действия</th>
             </tr>
           </thead>
@@ -432,10 +438,14 @@
                 <div v-if="mission.errors.coins" class="error-text">{{ mission.errors.coins }}</div>
               </td>
               <td>
-                <select v-model="mission.published" @change="clearMissionFeedback(mission)">
-                  <option :value="true">Опубликовано</option>
-                  <option :value="false">Черновик</option>
-                </select>
+                <button
+                  type="button"
+                  class="publish-toggle"
+                  :class="mission.published ? 'publish-toggle--published' : 'publish-toggle--draft'"
+                  @click="togglePublish(mission)"
+                >
+                  {{ mission.published ? 'Опубликовано' : 'Не опубликовано' }}
+                </button>
               </td>
               <td>
                 <div class="actions actions--column">
@@ -597,6 +607,10 @@
         clearMissionFeedback(mission) {
           mission.feedback.type = '';
           mission.feedback.message = '';
+        },
+        togglePublish(mission) {
+          mission.published = !mission.published;
+          this.clearMissionFeedback(mission);
         },
         validateMission(mission) {
           let valid = true;
