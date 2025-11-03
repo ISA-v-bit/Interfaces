@@ -200,27 +200,7 @@
 
     .actions {
       display: flex;
-      gap: 8px;
-    }
-
-    .icon-button {
-      width: 36px;
-      height: 36px;
-      border: none;
-      border-radius: 10px;
-      background: #efecff;
-      color: #4b42d6;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.15s ease, background 0.2s ease;
-    }
-
-    .icon-button:hover {
-      background: #ded7ff;
-    }
-
-    .icon-button:active {
-      transform: scale(0.95);
+      justify-content: flex-end;
     }
 
     .btn {
@@ -247,6 +227,10 @@
       color: #37325c;
     }
 
+    .btn-save {
+      padding-inline: 22px;
+    }
+
     .empty {
       padding: 48px 0;
       text-align: center;
@@ -254,77 +238,50 @@
       font-size: 15px;
     }
 
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(34, 29, 70, 0.55);
-      backdrop-filter: blur(2px);
-      z-index: 1000;
-    }
-
-    .modal {
-      width: 640px;
-      max-width: 92vw;
-      background: #fff;
-      border-radius: 18px;
-      padding: 28px;
-      box-shadow: 0 26px 60px rgba(29, 24, 72, 0.35);
-    }
-
-    .modal__title {
-      margin: 0 0 20px;
-      font-size: 20px;
-      font-weight: 700;
-      color: #2c2663;
-    }
-
-    .modal__grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px 24px;
-    }
-
-    .modal__field label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #585377;
-    }
-
-    .upload-tile {
-      border: 1px dashed #c9c4f1;
-      border-radius: 14px;
-      padding: 16px;
+    .upload-field {
       display: flex;
       flex-direction: column;
-      align-items: center;
       gap: 12px;
-      background: #faf8ff;
+      align-items: flex-start;
     }
 
-    .upload-tile img {
-      width: 140px;
-      height: 78px;
+    .upload-field__preview {
+      width: 112px;
+      height: 64px;
       border-radius: 12px;
       object-fit: cover;
-      box-shadow: 0 12px 22px rgba(44, 38, 99, 0.22);
+      box-shadow: 0 10px 20px rgba(44, 38, 99, 0.16);
     }
 
-    .link {
-      text-decoration: none;
+    .upload-trigger {
+      border: none;
+      background: #efecff;
+      color: #4b42d6;
       font-weight: 600;
-      color: #5e55ff;
+      border-radius: 10px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
     }
 
-    .modal__footer {
-      margin-top: 24px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
+    .upload-trigger:hover {
+      background: #ded7ff;
+    }
+
+    .upload-trigger:active {
+      transform: scale(0.97);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .error-text {
@@ -363,10 +320,6 @@
       .page-header {
         flex-direction: column;
         align-items: flex-start;
-      }
-
-      .modal__grid {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -426,22 +379,64 @@
           <tbody>
             <tr v-for="mission in missions" :key="mission.id">
               <td class="icon-cell">
-                <img :src="mission.icon" :alt="mission.title">
+                <div class="upload-field">
+                  <img
+                    class="upload-field__preview"
+                    :src="mission.icon"
+                    :alt="mission.title || 'Иконка миссии'"
+                  >
+                  <div>
+                    <input
+                      class="sr-only"
+                      type="file"
+                      accept="image/*"
+                      :id="`mission-icon-${mission.id}`"
+                      @change="onIconSelect($event, mission)"
+                    >
+                    <label class="upload-trigger" :for="`mission-icon-${mission.id}`">Заменить</label>
+                  </div>
+                  <div v-if="mission.errors.icon" class="error-text">{{ mission.errors.icon }}</div>
+                </div>
               </td>
-              <td><input type="text" :value="mission.title" readonly></td>
-              <td><input type="text" :value="mission.description" readonly></td>
-              <td><input type="number" :value="mission.coins" readonly></td>
               <td>
-                <span
-                  class="status"
-                  :class="mission.published ? 'status--published' : 'status--draft'"
+                <input
+                  type="text"
+                  v-model.trim="mission.title"
+                  :class="{ 'input-error': mission.errors.title }"
+                  @input="mission.errors.title = ''"
+                  placeholder="Название миссии"
                 >
-                  {{ mission.published ? 'Опубликовано' : 'Черновик' }}
-                </span>
+                <div v-if="mission.errors.title" class="error-text">{{ mission.errors.title }}</div>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  v-model.trim="mission.description"
+                  :class="{ 'input-error': mission.errors.description }"
+                  @input="mission.errors.description = ''"
+                  placeholder="Описание миссии"
+                >
+                <div v-if="mission.errors.description" class="error-text">{{ mission.errors.description }}</div>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  v-model.number="mission.coins"
+                  min="1"
+                  :class="{ 'input-error': mission.errors.coins }"
+                  @input="mission.errors.coins = ''"
+                >
+                <div v-if="mission.errors.coins" class="error-text">{{ mission.errors.coins }}</div>
+              </td>
+              <td>
+                <select v-model="mission.published">
+                  <option :value="true">Опубликовано</option>
+                  <option :value="false">Черновик</option>
+                </select>
               </td>
               <td>
                 <div class="actions">
-                  <button class="icon-button" @click="editMission(mission)">✏️</button>
+                  <button class="btn btn-primary btn-save" @click="saveMission(mission)">Сохранить</button>
                 </div>
               </td>
             </tr>
@@ -484,53 +479,6 @@
     </section>
 
     <div v-if="notice.message" class="notice" :class="noticeClass">{{ notice.message }}</div>
-
-    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
-      <div class="modal">
-        <h3 class="modal__title">{{ isNewMission ? 'Новая миссия' : 'Редактирование миссии' }}</h3>
-        <form @submit.prevent="submitMission">
-          <div class="modal__grid">
-            <div class="modal__field">
-              <label>Иконка</label>
-              <div class="upload-tile">
-                <img :src="form.icon" :alt="form.title">
-                <a href="#" class="link" @click.prevent>Загрузить</a>
-              </div>
-            </div>
-            <div class="modal__field">
-              <label>Название</label>
-              <input type="text" v-model.trim="form.title" required>
-            </div>
-            <div class="modal__field">
-              <label>Описание</label>
-              <input type="text" v-model.trim="form.description" required>
-            </div>
-            <div class="modal__field">
-              <label>Алгокоины</label>
-              <input
-                type="number"
-                v-model.number="form.coins"
-                min="1"
-                :class="{ 'input-error': errors.coins }"
-                required
-              >
-              <div v-if="errors.coins" class="error-text">{{ errors.coins }}</div>
-            </div>
-            <div class="modal__field">
-              <label>Статус</label>
-              <select v-model="form.published">
-                <option :value="true">Опубликовано</option>
-                <option :value="false">Черновик</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal__footer">
-            <button type="button" class="btn btn-secondary" @click="closeModal">Отмена</button>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -551,7 +499,14 @@
               title: 'Streak keeper',
               description: 'Join at least 4 classes this month - stay consistent!',
               coins: 10,
-              published: false
+              published: false,
+              errors: {
+                title: '',
+                description: '',
+                coins: '',
+                icon: ''
+              },
+              isNew: false
             },
             {
               id: 2,
@@ -559,7 +514,14 @@
               title: 'Welcome mission',
               description: 'Complete your onboarding tasks to unlock extra rewards.',
               coins: 25,
-              published: true
+              published: true,
+              errors: {
+                title: '',
+                description: '',
+                coins: '',
+                icon: ''
+              },
+              isNew: false
             }
           ],
           shopItems: [
@@ -569,13 +531,6 @@
             { code: 'whatsapp_stickers', price: 100, available: '∞', purchased: 22 },
             { code: 'scratch_tutorial', price: 400, available: '∞', purchased: 0 }
           ],
-          showModal: false,
-          isNewMission: false,
-          form: null,
-          editingId: null,
-          errors: {
-            coins: ''
-          },
           notice: {
             message: '',
             type: ''
@@ -594,66 +549,81 @@
           this.activeTab = id;
         },
         addMission() {
-          this.isNewMission = true;
-          this.editingId = null;
-          this.form = {
+          const newMission = {
             id: this.nextMissionId,
             icon: 'images/timing.jpg',
-            title: 'Новая миссия',
+            title: '',
             description: '',
             coins: 1,
-            published: false
+            published: false,
+            errors: {
+              title: '',
+              description: '',
+              coins: '',
+              icon: ''
+            },
+            isNew: true
           };
-          this.openModal();
+          this.nextMissionId += 1;
+          this.missions.push(newMission);
+          this.$nextTick(() => {
+            this.showNotice('Добавлена новая миссия, заполните поля и сохраните изменения', 'success');
+          });
         },
-        editMission(mission) {
-          this.isNewMission = false;
-          this.editingId = mission.id;
-          this.form = Object.assign({}, mission);
-          this.openModal();
+        clearMissionErrors(mission) {
+          mission.errors.title = '';
+          mission.errors.description = '';
+          mission.errors.coins = '';
+          mission.errors.icon = '';
         },
-        openModal() {
-          this.clearErrors();
-          this.showModal = true;
-        },
-        closeModal() {
-          this.showModal = false;
-          this.form = null;
-          this.editingId = null;
-          this.isNewMission = false;
-          this.clearErrors();
-        },
-        validateForm() {
+        validateMission(mission) {
           let valid = true;
-          this.clearErrors();
-          if (!Number.isFinite(this.form.coins) || this.form.coins <= 0) {
-            this.errors.coins = 'Укажите количество Алгокоинов больше 0';
+          this.clearMissionErrors(mission);
+
+          if (!mission.icon) {
+            mission.errors.icon = 'Добавьте изображение миссии';
             valid = false;
           }
+
+          if (!mission.title) {
+            mission.errors.title = 'Введите название миссии';
+            valid = false;
+          }
+
+          if (!mission.description) {
+            mission.errors.description = 'Введите описание миссии';
+            valid = false;
+          }
+
+          if (!Number.isFinite(mission.coins) || mission.coins <= 0) {
+            mission.errors.coins = 'Укажите количество Алгокоинов больше 0';
+            valid = false;
+          }
+
           return valid;
         },
-        submitMission() {
-          if (!this.validateForm()) {
-            this.showNotice('Исправьте ошибки в форме', 'error');
+        saveMission(mission) {
+          if (!this.validateMission(mission)) {
+            this.showNotice('Исправьте ошибки и попробуйте снова', 'error');
             return;
           }
 
-          if (this.isNewMission) {
-            this.nextMissionId += 1;
-            this.missions.push(Object.assign({}, this.form));
-            this.showNotice('Новая миссия добавлена', 'success');
-          } else {
-            const index = this.missions.findIndex(mission => mission.id === this.editingId);
-            if (index !== -1) {
-              this.$set(this.missions, index, Object.assign({}, this.form));
-              this.showNotice('Изменения сохранены', 'success');
-            }
+          mission.isNew = false;
+          this.showNotice('Изменения миссии сохранены', 'success');
+        },
+        onIconSelect(event, mission) {
+          const [file] = event.target.files;
+          if (!file) {
+            return;
           }
 
-          this.closeModal();
-        },
-        clearErrors() {
-          this.errors.coins = '';
+          const reader = new FileReader();
+          reader.onload = e => {
+            mission.icon = e.target.result;
+            mission.errors.icon = '';
+          };
+          reader.readAsDataURL(file);
+          event.target.value = '';
         },
         showNotice(message, type) {
           this.notice.message = message;
