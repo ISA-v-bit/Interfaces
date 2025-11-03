@@ -442,7 +442,6 @@
               <td>
                 <div class="actions">
                   <button class="icon-button" @click="editMission(mission)">✏️</button>
-                  <button class="icon-button" @click="removeMission(mission.id)">🗑️</button>
                 </div>
               </td>
             </tr>
@@ -612,10 +611,6 @@
           this.editingId = mission.id;
           this.form = Object.assign({}, mission);
           this.openModal();
-        },
-        removeMission(id) {
-          this.missions = this.missions.filter(mission => mission.id !== id);
-          this.showNotice('Миссия удалена', 'success');
         },
         openModal() {
           this.clearErrors();
